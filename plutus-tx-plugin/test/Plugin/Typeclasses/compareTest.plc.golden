@@ -1,6 +1,23 @@
 (program
   (let
     (nonrec)
+    (termbind
+      (strict)
+      (vardecl equalsInteger (fun (con integer) (fun (con integer) (con bool))))
+      (builtin equalsInteger)
+    )
+    (termbind
+      (strict)
+      (vardecl
+        lessThanEqInteger (fun (con integer) (fun (con integer) (con bool)))
+      )
+      (builtin lessThanEqualsInteger)
+    )
+    (termbind
+      (strict)
+      (vardecl ifThenElse (all a (type) (fun (con bool) (fun a (fun a a)))))
+      (builtin ifThenElse)
+    )
     (datatypebind
       (datatype (tyvardecl Unit (type))  Unit_match (vardecl Unit Unit))
     )
@@ -38,13 +55,7 @@
                   [
                     Bool_match
                     [
-                      [
-                        [
-                          { (builtin ifThenElse) Bool }
-                          [ [ (builtin equalsInteger) x ] y ]
-                        ]
-                        True
-                      ]
+                      [ [ { ifThenElse Bool } [ [ equalsInteger x ] y ] ] True ]
                       False
                     ]
                   ]
@@ -64,8 +75,8 @@
                           [
                             [
                               [
-                                { (builtin ifThenElse) Bool }
-                                [ [ (builtin lessThanEqualsInteger) x ] y ]
+                                { ifThenElse Bool }
+                                [ [ lessThanEqInteger x ] y ]
                               ]
                               True
                             ]
@@ -106,10 +117,7 @@
                     Bool_match
                     [
                       [
-                        [
-                          { (builtin ifThenElse) Bool }
-                          [ [ (builtin lessThanEqualsInteger) x ] y ]
-                        ]
+                        [ { ifThenElse Bool } [ [ lessThanEqInteger x ] y ] ]
                         True
                       ]
                       False
@@ -145,10 +153,7 @@
                     Bool_match
                     [
                       [
-                        [
-                          { (builtin ifThenElse) Bool }
-                          [ [ (builtin lessThanEqualsInteger) x ] y ]
-                        ]
+                        [ { ifThenElse Bool } [ [ lessThanEqInteger x ] y ] ]
                         True
                       ]
                       False
@@ -174,18 +179,16 @@
         (lam
           y
           (con integer)
-          [
-            [
-              [
-                { (builtin ifThenElse) Bool }
-                [ [ (builtin equalsInteger) x ] y ]
-              ]
-              True
-            ]
-            False
-          ]
+          [ [ [ { ifThenElse Bool } [ [ equalsInteger x ] y ] ] True ] False ]
         )
       )
+    )
+    (termbind
+      (strict)
+      (vardecl
+        greaterThanEqInteger (fun (con integer) (fun (con integer) (con bool)))
+      )
+      (builtin greaterThanEqualsInteger)
     )
     (termbind
       (strict)
@@ -198,17 +201,18 @@
           y
           (con integer)
           [
-            [
-              [
-                { (builtin ifThenElse) Bool }
-                [ [ (builtin greaterThanEqualsInteger) x ] y ]
-              ]
-              True
-            ]
+            [ [ { ifThenElse Bool } [ [ greaterThanEqInteger x ] y ] ] True ]
             False
           ]
         )
       )
+    )
+    (termbind
+      (strict)
+      (vardecl
+        greaterThanInteger (fun (con integer) (fun (con integer) (con bool)))
+      )
+      (builtin greaterThanInteger)
     )
     (termbind
       (strict)
@@ -220,13 +224,7 @@
           y
           (con integer)
           [
-            [
-              [
-                { (builtin ifThenElse) Bool }
-                [ [ (builtin greaterThanInteger) x ] y ]
-              ]
-              True
-            ]
+            [ [ { ifThenElse Bool } [ [ greaterThanInteger x ] y ] ] True ]
             False
           ]
         )
@@ -242,17 +240,17 @@
           y
           (con integer)
           [
-            [
-              [
-                { (builtin ifThenElse) Bool }
-                [ [ (builtin lessThanEqualsInteger) x ] y ]
-              ]
-              True
-            ]
-            False
+            [ [ { ifThenElse Bool } [ [ lessThanEqInteger x ] y ] ] True ] False
           ]
         )
       )
+    )
+    (termbind
+      (strict)
+      (vardecl
+        lessThanInteger (fun (con integer) (fun (con integer) (con bool)))
+      )
+      (builtin lessThanInteger)
     )
     (termbind
       (strict)
@@ -263,16 +261,7 @@
         (lam
           y
           (con integer)
-          [
-            [
-              [
-                { (builtin ifThenElse) Bool }
-                [ [ (builtin lessThanInteger) x ] y ]
-              ]
-              True
-            ]
-            False
-          ]
+          [ [ [ { ifThenElse Bool } [ [ lessThanInteger x ] y ] ] True ] False ]
         )
       )
     )

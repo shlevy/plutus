@@ -12,6 +12,7 @@
 {-# LANGUAGE TypeOperators         #-}
 {-# LANGUAGE ViewPatterns          #-}
 {-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 -- | Thread token data type definition and minting policy.
 --   Thread tokens are used to identify the contract instance on the blockchain,
 --   and ensuring that the state was produced by running the state machine from its initial state.

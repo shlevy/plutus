@@ -5,6 +5,7 @@
 {-# LANGUAGE NamedFieldPuns     #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE TemplateHaskell    #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 
 -- | Minting policy script for credential tokens.
 module Plutus.Contracts.Prism.Credential(

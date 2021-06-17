@@ -13,6 +13,7 @@
 {-# LANGUAGE TypeFamilies        #-}
 {-# LANGUAGE TypeOperators       #-}
 {-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 -- | Implements an n-out-of-m multisig contract.
 module Plutus.Contracts.MultiSig
     ( MultiSig(..)

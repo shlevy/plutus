@@ -15,6 +15,7 @@
 {-# OPTIONS_GHC -fno-strictness #-}
 {-# OPTIONS_GHC -fno-specialise #-}
 {-# OPTIONS_GHC -fno-spec-constr #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 -- | A basic governance contract in Plutus.
 module Plutus.Contracts.Governance (
     -- $governance

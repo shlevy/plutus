@@ -6,6 +6,7 @@
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE TemplateHaskell    #-}
 {-# LANGUAGE TypeApplications   #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 -- | State machine that manages credential tokens
 module Plutus.Contracts.Prism.StateMachine(
     IDState(..)

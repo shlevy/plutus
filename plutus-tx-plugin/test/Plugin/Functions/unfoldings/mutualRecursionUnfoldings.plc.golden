@@ -12,6 +12,23 @@
         (vardecl True Bool) (vardecl False Bool)
       )
     )
+    (termbind
+      (strict)
+      (vardecl equalsInteger (fun (con integer) (fun (con integer) (con bool))))
+      (builtin equalsInteger)
+    )
+    (termbind
+      (strict)
+      (vardecl ifThenElse (all a (type) (fun (con bool) (fun a (fun a a)))))
+      (builtin ifThenElse)
+    )
+    (termbind
+      (strict)
+      (vardecl
+        subtractInteger (fun (con integer) (fun (con integer) (con integer)))
+      )
+      (builtin subtractInteger)
+    )
     (let
       (rec)
       (termbind
@@ -29,8 +46,8 @@
                     [
                       [
                         [
-                          { (builtin ifThenElse) Bool }
-                          [ [ (builtin equalsInteger) n ] (con integer 0) ]
+                          { ifThenElse Bool }
+                          [ [ equalsInteger n ] (con integer 0) ]
                         ]
                         True
                       ]
@@ -44,9 +61,7 @@
               (lam
                 thunk
                 Unit
-                [
-                  oddDirect [ [ (builtin subtractInteger) n ] (con integer 1) ]
-                ]
+                [ oddDirect [ [ subtractInteger n ] (con integer 1) ] ]
               )
             ]
             Unit
@@ -68,8 +83,8 @@
                     [
                       [
                         [
-                          { (builtin ifThenElse) Bool }
-                          [ [ (builtin equalsInteger) n ] (con integer 0) ]
+                          { ifThenElse Bool }
+                          [ [ equalsInteger n ] (con integer 0) ]
                         ]
                         True
                       ]
@@ -83,9 +98,7 @@
               (lam
                 thunk
                 Unit
-                [
-                  evenDirect [ [ (builtin subtractInteger) n ] (con integer 1) ]
-                ]
+                [ evenDirect [ [ subtractInteger n ] (con integer 1) ] ]
               )
             ]
             Unit

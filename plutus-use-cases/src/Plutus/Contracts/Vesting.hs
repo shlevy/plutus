@@ -13,6 +13,7 @@
 {-# LANGUAGE TypeOperators      #-}
 {-# OPTIONS_GHC -fno-ignore-interface-pragmas #-}
 {-# OPTIONS_GHC -fno-specialise #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 module Plutus.Contracts.Vesting (
     -- $vesting
     VestingParams(..),

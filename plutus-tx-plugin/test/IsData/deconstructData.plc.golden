@@ -1,6 +1,24 @@
 (program
   (let
     (nonrec)
+    (termbind
+      (strict)
+      (vardecl
+        unsafeDataAsConstr
+        (fun (con data) [[(con pair) (con integer)] [(con list) (con data)]])
+      )
+      (builtin unConstrData)
+    )
+    (termbind
+      (strict)
+      (vardecl snd (all a (type) (all b (type) (fun [[(con pair) a] b] b))))
+      (builtin sndPair)
+    )
+    (termbind
+      (strict)
+      (vardecl tail (all a (type) (fun [(con list) a] [(con list) a])))
+      (builtin tailList)
+    )
     (datatypebind
       (datatype
         (tyvardecl Tuple2 (fun (type) (fun (type) (type))))
@@ -19,6 +37,42 @@
         Maybe_match
         (vardecl Just (fun a [Maybe a])) (vardecl Nothing [Maybe a])
       )
+    )
+    (termbind
+      (strict)
+      (vardecl head (all a (type) (fun [(con list) a] a)))
+      (builtin headList)
+    )
+    (termbind
+      (strict)
+      (vardecl
+        chooseList
+        (all b (type) (all a (type) (fun b (fun b (fun [(con list) a] b)))))
+      )
+      (builtin chooseList)
+    )
+    (termbind
+      (strict)
+      (vardecl
+        chooseData
+        (all a (type) (fun a (fun a (fun a (fun a (fun a (fun (con data) a)))))))
+      )
+      (builtin chooseData)
+    )
+    (termbind
+      (strict)
+      (vardecl equalsInteger (fun (con integer) (fun (con integer) (con bool))))
+      (builtin equalsInteger)
+    )
+    (termbind
+      (strict)
+      (vardecl fst (all a (type) (all b (type) (fun [[(con pair) a] b] a))))
+      (builtin fstPair)
+    )
+    (termbind
+      (strict)
+      (vardecl ifThenElse (all a (type) (fun (con bool) (fun a (fun a a)))))
+      (builtin ifThenElse)
     )
     (termbind
       (strict)
@@ -48,10 +102,7 @@
                         [
                           [
                             [
-                              {
-                                (builtin chooseData)
-                                (fun Unit [Maybe [[Tuple2 a] b]])
-                              }
+                              { chooseData (fun Unit [Maybe [[Tuple2 a] b]]) }
                               (lam
                                 ds
                                 Unit
@@ -63,14 +114,14 @@
                                       tup
                                       [[(con pair) (con integer)] [(con list) (con data)]]
                                     )
-                                    [ (builtin unConstrData) d ]
+                                    [ unsafeDataAsConstr d ]
                                   )
                                   (termbind
                                     (nonstrict)
                                     (vardecl l [(con list) (con data)])
                                     [
                                       {
-                                        { (builtin sndPair) (con integer) }
+                                        { snd (con integer) }
                                         [(con list) (con data)]
                                       }
                                       tup
@@ -79,7 +130,7 @@
                                   (termbind
                                     (nonstrict)
                                     (vardecl l [(con list) (con data)])
-                                    [ { (builtin tailList) (con data) } l ]
+                                    [ { tail (con data) } l ]
                                   )
                                   (termbind
                                     (nonstrict)
@@ -92,13 +143,7 @@
                                               { Maybe_match a }
                                               [
                                                 dFromData
-                                                [
-                                                  {
-                                                    (builtin headList)
-                                                    (con data)
-                                                  }
-                                                  l
-                                                ]
+                                                [ { head (con data) } l ]
                                               ]
                                             ]
                                             (fun Unit [Maybe [[Tuple2 a] b]])
@@ -118,10 +163,7 @@
                                                         [
                                                           dFromData
                                                           [
-                                                            {
-                                                              (builtin headList)
-                                                              (con data)
-                                                            }
+                                                            { head (con data) }
                                                             l
                                                           ]
                                                         ]
@@ -176,7 +218,7 @@
                                           [
                                             {
                                               {
-                                                (builtin chooseList)
+                                                chooseList
                                                 (fun Unit [Maybe [[Tuple2 a] b]])
                                               }
                                               (con data)
@@ -187,7 +229,7 @@
                                             ds Unit { Nothing [[Tuple2 a] b] }
                                           )
                                         ]
-                                        [ { (builtin tailList) (con data) } l ]
+                                        [ { tail (con data) } l ]
                                       ]
                                       Unit
                                     ]
@@ -201,7 +243,7 @@
                                           [
                                             {
                                               {
-                                                (builtin chooseList)
+                                                chooseList
                                                 (fun Unit [Maybe [[Tuple2 a] b]])
                                               }
                                               (con data)
@@ -226,7 +268,7 @@
                                           [
                                             {
                                               {
-                                                (builtin chooseList)
+                                                chooseList
                                                 (fun Unit [Maybe [[Tuple2 a] b]])
                                               }
                                               (con data)
@@ -247,18 +289,15 @@
                                       [
                                         [
                                           {
-                                            (builtin ifThenElse)
+                                            ifThenElse
                                             (fun Unit [Maybe [[Tuple2 a] b]])
                                           }
                                           [
                                             [
-                                              (builtin equalsInteger)
+                                              equalsInteger
                                               [
                                                 {
-                                                  {
-                                                    (builtin fstPair)
-                                                    (con integer)
-                                                  }
+                                                  { fst (con integer) }
                                                   [(con list) (con data)]
                                                 }
                                                 tup
@@ -295,6 +334,19 @@
       )
     )
     (termbind
+      (nonstrict)
+      (vardecl
+        fFromDataTuple2
+        (all a (type) (all b (type) (fun [(lam a (type) (fun (con data) [Maybe a])) a] (fun [(lam a (type) (fun (con data) [Maybe a])) b] [(lam a (type) (fun (con data) [Maybe a])) [[Tuple2 a] b]]))))
+      )
+      fFromDataTuple2_cfromBuiltinData
+    )
+    (termbind
+      (strict)
+      (vardecl unsafeDataAsI (fun (con data) (con integer)))
+      (builtin unIData)
+    )
+    (termbind
       (strict)
       (vardecl
         fFromDataInteger_cfromBuiltinData (fun (con data) [Maybe (con integer)])
@@ -309,14 +361,14 @@
                 [
                   [
                     [
-                      { (builtin chooseData) (fun Unit [Maybe (con integer)]) }
+                      { chooseData (fun Unit [Maybe (con integer)]) }
                       (lam ds Unit { Nothing (con integer) })
                     ]
                     (lam ds Unit { Nothing (con integer) })
                   ]
                   (lam ds Unit { Nothing (con integer) })
                 ]
-                (lam ds Unit [ { Just (con integer) } [ (builtin unIData) d ] ])
+                (lam ds Unit [ { Just (con integer) } [ unsafeDataAsI d ] ])
               ]
               (lam ds Unit { Nothing (con integer) })
             ]
@@ -329,15 +381,20 @@
     (termbind
       (nonstrict)
       (vardecl
+        fFromDataInteger
+        [(lam a (type) (fun (con data) [Maybe a])) (con integer)]
+      )
+      fFromDataInteger_cfromBuiltinData
+    )
+    (termbind
+      (nonstrict)
+      (vardecl
         dFromData
         [(lam a (type) (fun (con data) [Maybe a])) [[Tuple2 (con integer)] (con integer)]]
       )
       [
-        [
-          { { fFromDataTuple2_cfromBuiltinData (con integer) } (con integer) }
-          fFromDataInteger_cfromBuiltinData
-        ]
-        fFromDataInteger_cfromBuiltinData
+        [ { { fFromDataTuple2 (con integer) } (con integer) } fFromDataInteger ]
+        fFromDataInteger
       ]
     )
     (termbind

@@ -10,6 +10,7 @@
 {-# LANGUAGE TypeApplications  #-}
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
+{-# OPTIONS_GHC -fplugin-opt PlutusTx.Plugin:max-simplifier-iterations=0 #-}
 -- | Plutus implementation of an account that can be unlocked with a token.
 --   Whoever owns the token can spend the outputs locked by the contract.
 --   (A suitable token can be created with the 'Plutus.Contracts.Currency'

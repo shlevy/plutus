@@ -22,6 +22,23 @@
     )
     (termbind
       (strict)
+      (vardecl equalsInteger (fun (con integer) (fun (con integer) (con bool))))
+      (builtin equalsInteger)
+    )
+    (termbind
+      (strict)
+      (vardecl ifThenElse (all a (type) (fun (con bool) (fun a (fun a a)))))
+      (builtin ifThenElse)
+    )
+    (termbind
+      (strict)
+      (vardecl
+        lessThanEqInteger (fun (con integer) (fun (con integer) (con bool)))
+      )
+      (builtin lessThanEqualsInteger)
+    )
+    (termbind
+      (strict)
       (vardecl
         fOrdData_ccompare (fun (con integer) (fun (con integer) Ordering))
       )
@@ -38,13 +55,7 @@
                   [
                     Bool_match
                     [
-                      [
-                        [
-                          { (builtin ifThenElse) Bool }
-                          [ [ (builtin equalsInteger) x ] y ]
-                        ]
-                        True
-                      ]
+                      [ [ { ifThenElse Bool } [ [ equalsInteger x ] y ] ] True ]
                       False
                     ]
                   ]
@@ -64,8 +75,8 @@
                           [
                             [
                               [
-                                { (builtin ifThenElse) Bool }
-                                [ [ (builtin lessThanEqualsInteger) x ] y ]
+                                { ifThenElse Bool }
+                                [ [ lessThanEqInteger x ] y ]
                               ]
                               True
                             ]
