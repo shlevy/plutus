@@ -18,8 +18,8 @@ import Effect.Console as Console
 import Halogen (HalogenM, liftEffect, raise)
 import Network.RemoteData as RemoteData
 import Playground.Lenses (_getEndpointDescription)
-import Plutus.PAB.Webserver (SPParams_, getApiContractByContractinstanceidSchema, getApiFullreport, postApiContractActivate, postApiContractByContractinstanceidEndpointByEndpointname)
-import Plutus.PAB.Webserver.Types (ContractSignatureResponse, FullReport, CombinedWSStreamToServer)
+import Plutus.PAB.Webserver (SPParams_, getApiContractByContractinstanceidSchema, getApiFullreport, getApiNewContractInstances, getApiNewContractDefinitions, postApiContractActivate, postApiNewContractInstanceByContractinstanceidEndpointByEndpointname, getApiNewContractInstanceByContractinstanceidStatus)
+import Plutus.PAB.Webserver.Types (ContractInstanceClientState, ContractSignatureResponse, FullReport, CombinedWSStreamToServer)
 import Servant.PureScript.Ajax (AjaxError)
 import Servant.PureScript.Settings (SPSettings_)
 import Wallet.Types (EndpointDescription, ContractInstanceId, NotificationError)
@@ -28,9 +28,11 @@ import ContractExample (ExampleContracts)
 class
   Monad m <= MonadApp m where
   getFullReport :: m (WebData (FullReport ExampleContracts))
-  getContractSignature :: ContractInstanceId -> m (WebData (ContractSignatureResponse ExampleContracts))
-  invokeEndpoint :: RawJson -> ContractInstanceId -> EndpointDescription -> m (WebData (Maybe NotificationError))
-  activateContract :: ExampleContracts -> m Unit
+  getContractInstanceStatus :: ContractInstanceId -> m (WebData (ContractInstanceClientState ExampleContracts))
+  getContractInstanceClientState :: m (WebData (Array (ContractInstanceClientState ExampleContracts)))
+  getContractDefinitions :: m (WebData (Array (ContractSignatureResponse ExampleContracts)))
+  invokeEndpoint :: RawJson -> ContractInstanceId -> EndpointDescription -> m (WebData Unit)
+  activateContract :: ExampleContracts -> m (WebData ContractInstanceId)
   sendWebSocketMessage :: CombinedWSStreamToServer -> m Unit
   log :: String -> m Unit
 
@@ -71,14 +73,19 @@ runHalogenApp = unwrap
 
 instance monadAppHalogenApp :: (MonadAff m, MonadAsk (SPSettings_ SPParams_) m) => MonadApp (HalogenApp m) where
   getFullReport = runAjax getApiFullreport
-  getContractSignature csContract = runAjax $ getApiContractByContractinstanceidSchema $ view _contractInstanceIdString csContract
+  getContractInstanceStatus contractInstanceId =
+    runAjax
+      $ getApiNewContractInstanceByContractinstanceidStatus
+          (view _contractInstanceIdString contractInstanceId)
+  getContractInstanceClientState = runAjax getApiNewContractInstances
+  getContractDefinitions = runAjax getApiNewContractDefinitions
   invokeEndpoint payload contractInstanceId endpointDescription =
     runAjax
-      $ postApiContractByContractinstanceidEndpointByEndpointname
+      $ postApiNewContractInstanceByContractinstanceidEndpointByEndpointname
           payload
           (view _contractInstanceIdString contractInstanceId)
           (view _getEndpointDescription endpointDescription)
-  activateContract contract = void $ runAjax $ postApiContractActivate contract
+  activateContract contract = runAjax $ postApiContractActivate contract
   sendWebSocketMessage msg = HalogenApp $ raise $ SendWebSocketMessage msg
   log str = liftEffect $ Console.log str
 
