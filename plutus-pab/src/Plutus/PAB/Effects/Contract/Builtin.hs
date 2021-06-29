@@ -35,31 +35,32 @@ module Plutus.PAB.Effects.Contract.Builtin(
     , HasDefinitions(..)
     ) where
 
+
 import           Control.Monad.Freer
 import           Control.Monad.Freer.Error                        (Error, throwError)
 import           Control.Monad.Freer.Extras.Log                   (LogMsg (..), logDebug)
 import           Data.Aeson                                       (FromJSON, Result (..), ToJSON, Value, fromJSON)
 import qualified Data.Aeson                                       as JSON
+import           Data.Aeson.Text                                  (encodeToLazyText)
 import           Data.Bifunctor                                   (Bifunctor (first))
 import           Data.Foldable                                    (foldlM, traverse_)
 import           Data.Row
-
-import           Plutus.Contract.Effects                          (PABReq, PABResp)
-import           Plutus.Contract.Types                            (ResumableResult (..), SuspendedContract (..))
-import           Plutus.PAB.Effects.Contract                      (ContractEffect (..), PABContract (..))
-import           Plutus.PAB.Monitoring.PABLogMsg                  (PABMultiAgentMsg (..))
-import           Plutus.PAB.Types                                 (PABError (..))
-
 import qualified Data.Text                                        as Text
+import           Data.Text.Lazy                                   (toStrict)
 import           GHC.Generics                                     (Generic)
 import           Playground.Schema                                (endpointsToSchemas)
 import           Playground.Types                                 (FunctionSchema)
 import           Plutus.Contract                                  (Contract, ContractInstanceId, EmptySchema)
+import           Plutus.Contract.Effects                          (PABReq, PABResp)
 import           Plutus.Contract.Resumable                        (Response, responses, rspResponse)
 import           Plutus.Contract.Schema                           (Input, Output)
 import           Plutus.Contract.State                            (ContractResponse (..), State (..))
 import qualified Plutus.Contract.State                            as ContractState
+import           Plutus.Contract.Types                            (ResumableResult (..), SuspendedContract (..))
 import           Plutus.PAB.Core.ContractInstance.RequestHandlers (ContractInstanceMsg (ContractLog, ProcessFirstInboxMessage))
+import           Plutus.PAB.Effects.Contract                      (ContractEffect (..), PABContract (..))
+import           Plutus.PAB.Monitoring.PABLogMsg                  (PABMultiAgentMsg (..))
+import           Plutus.PAB.Types                                 (PABError (..))
 import           Plutus.Trace.Emulator.Types                      (ContractInstanceStateInternal (..))
 import qualified Plutus.Trace.Emulator.Types                      as Emulator
 import           Schema                                           (FormSchema)
@@ -149,8 +150,13 @@ fromResponse cid (SomeBuiltin contract) ContractResponse{newState=State{record}}
   initialState <- initBuiltin @effs @a cid contract
 
   let runUpdate (SomeBuiltinState oldS oldW) n = do
-        case fromJSON (rspResponse (snd <$> n)) of
-          Error e      -> throwError . OtherError $ "Couldn't decode JSON response when reconstruting state: " <> Text.pack e
+        let v = rspResponse (snd <$> n)
+            m :: Result (Response PABResp)
+            m = fromJSON v
+        case m of
+          Error e      -> throwError $ AesonDecodingError
+                                      ("Couldn't decode JSON response when reconstructing state: " <> Text.pack e <> ".")
+                                      (toStrict . encodeToLazyText $ v)
           Success resp -> updateBuiltin @effs @a cid oldS oldW resp
 
   foldlM runUpdate initialState (responses record)

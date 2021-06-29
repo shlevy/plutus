@@ -50,6 +50,8 @@ import           Wallet.Emulator.Wallet             (Wallet)
 data AppMsg t =
     ActiveContractsMsg
     | ContractHistoryMsg
+    | PABStateRestored
+    | RestoringPABState
     | PABMsg (PABLogMsg t)
     | AvailableContract Text
     | ContractInstances (ContractDef t) [ContractInstanceId]
@@ -64,6 +66,8 @@ instance (Pretty (ContractDef t)) => Pretty (AppMsg t) where
     pretty = \case
         ActiveContractsMsg               -> "Active contracts"
         ContractHistoryMsg               -> "Contract history"
+        RestoringPABState                -> "Restoring PAB state ..."
+        PABStateRestored                 -> "PAB state restored."
         PABMsg m                         -> pretty m
         AvailableContract t              -> pretty t
         ContractInstances t s            -> pretty t <+> pretty s
@@ -108,6 +112,10 @@ In the definitions below, every object produced by 'toObject' has a field
 
 instance (ToJSON (ContractDef t), StructuredLog (ContractDef t)) => ToObject (AppMsg t) where
     toObject v = \case
+        RestoringPABState ->
+            mkObjectStr "Restoring PAB state ..." ()
+        PABStateRestored ->
+            mkObjectStr "PAB state restored." ()
         ActiveContractsMsg ->
             mkObjectStr "Listing active contract instances" ()
         ContractHistoryMsg ->
