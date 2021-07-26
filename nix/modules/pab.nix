@@ -33,6 +33,13 @@ let
         scZeroSlotTime = cfg.zeroSlotTime;
         scSlotLength = cfg.slotLength;
       };
+      mscFeeConfig = {
+        fcConstantFee = {
+          getLovelace = cfg.constantFee;
+        };
+        fcScriptsFeeFactor = cfg.scriptsFeeFactor;
+      };
+      mscNetworkId = ""; # Empty string for Mainnet. Put a network magic number in the string to use the Testnet.
       mscKeptBlocks = 100000;
       mscBlockReaper = {
         brcInterval = 6000000;
@@ -179,6 +186,22 @@ in
       default = 1000;
       description = ''
         Length of a slot (in milliseconds).
+      '';
+    };
+
+    constantFee = mkOption {
+      type = types.int;
+      default = 10;
+      description = ''
+        Constant fee per transaction in lovelace.
+      '';
+    };
+
+    scriptsFeeFactor = mkOption {
+      type = types.float;
+      default = 1.0;
+      description = ''
+        Factor by which to multiply the size-dependent scripts fee in lovelace.
       '';
     };
 

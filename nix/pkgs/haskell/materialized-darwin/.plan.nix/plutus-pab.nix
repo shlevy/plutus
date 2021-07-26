@@ -47,6 +47,7 @@
           (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
           (hsPkgs."cardano-api" or (errorHandler.buildDepError "cardano-api"))
           (hsPkgs."cardano-crypto" or (errorHandler.buildDepError "cardano-crypto"))
+          (hsPkgs."cardano-ledger-byron" or (errorHandler.buildDepError "cardano-ledger-byron"))
           (hsPkgs."cardano-prelude" or (errorHandler.buildDepError "cardano-prelude"))
           (hsPkgs."cardano-slotting" or (errorHandler.buildDepError "cardano-slotting"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
@@ -70,6 +71,10 @@
           (hsPkgs."newtype-generics" or (errorHandler.buildDepError "newtype-generics"))
           (hsPkgs."nothunks" or (errorHandler.buildDepError "nothunks"))
           (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
+          (hsPkgs."ouroboros-consensus" or (errorHandler.buildDepError "ouroboros-consensus"))
+          (hsPkgs."ouroboros-consensus-byron" or (errorHandler.buildDepError "ouroboros-consensus-byron"))
+          (hsPkgs."ouroboros-consensus-shelley" or (errorHandler.buildDepError "ouroboros-consensus-shelley"))
+          (hsPkgs."ouroboros-consensus-cardano" or (errorHandler.buildDepError "ouroboros-consensus-cardano"))
           (hsPkgs."ouroboros-network" or (errorHandler.buildDepError "ouroboros-network"))
           (hsPkgs."ouroboros-network-framework" or (errorHandler.buildDepError "ouroboros-network-framework"))
           (hsPkgs."plutus-ledger-api" or (errorHandler.buildDepError "plutus-ledger-api"))
@@ -122,6 +127,7 @@
         buildable = true;
         modules = [
           "Servant/Extra"
+          "Cardano/Api/NetworkId/Extra"
           "Cardano/BM/Data/Tracer/Extras"
           "Cardano/Chain"
           "Cardano/ChainIndex/API"
@@ -141,7 +147,8 @@
           "Cardano/Node/Server"
           "Cardano/Node/Types"
           "Cardano/Protocol/Socket/Type"
-          "Cardano/Protocol/Socket/Server"
+          "Cardano/Protocol/Socket/Mock/Server"
+          "Cardano/Protocol/Socket/Mock/Client"
           "Cardano/Protocol/Socket/Client"
           "Cardano/Wallet/API"
           "Cardano/Wallet/Client"
@@ -235,6 +242,7 @@
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             (hsPkgs."freer-extras" or (errorHandler.buildDepError "freer-extras"))
             (hsPkgs."freer-simple" or (errorHandler.buildDepError "freer-simple"))
             (hsPkgs."plutus-contract" or (errorHandler.buildDepError "plutus-contract"))
@@ -329,6 +337,7 @@
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             (hsPkgs."freer-extras" or (errorHandler.buildDepError "freer-extras"))
             (hsPkgs."freer-simple" or (errorHandler.buildDepError "freer-simple"))
             (hsPkgs."http-client" or (errorHandler.buildDepError "http-client"))
@@ -442,6 +451,25 @@
             "Main.hs"
             ] ++ (pkgs.lib).optional (flags.defer-plugin-errors) "";
           };
+        "sync-client" = {
+          depends = [
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."cardano-api" or (errorHandler.buildDepError "cardano-api"))
+            (hsPkgs."cardano-slotting" or (errorHandler.buildDepError "cardano-slotting"))
+            (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
+            (hsPkgs."ouroboros-consensus-byron" or (errorHandler.buildDepError "ouroboros-consensus-byron"))
+            (hsPkgs."ouroboros-consensus-cardano" or (errorHandler.buildDepError "ouroboros-consensus-cardano"))
+            (hsPkgs."ouroboros-consensus-shelley" or (errorHandler.buildDepError "ouroboros-consensus-shelley"))
+            (hsPkgs."ouroboros-network" or (errorHandler.buildDepError "ouroboros-network"))
+            (hsPkgs."plutus-ledger" or (errorHandler.buildDepError "plutus-ledger"))
+            (hsPkgs."plutus-pab" or (errorHandler.buildDepError "plutus-pab"))
+            ];
+          buildable = true;
+          hsSourceDirs = [ "sync-client" ];
+          mainPath = [
+            "Main.hs"
+            ] ++ (pkgs.lib).optional (flags.defer-plugin-errors) "";
+          };
         };
       tests = {
         "plutus-pab-test-light" = {
@@ -451,9 +479,11 @@
             (hsPkgs."aeson-pretty" or (errorHandler.buildDepError "aeson-pretty"))
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
+            (hsPkgs."cardano-api" or (errorHandler.buildDepError "cardano-api"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
             (hsPkgs."freer-extras" or (errorHandler.buildDepError "freer-extras"))
             (hsPkgs."freer-simple" or (errorHandler.buildDepError "freer-simple"))
+            (hsPkgs."hedgehog" or (errorHandler.buildDepError "hedgehog"))
             (hsPkgs."http-client" or (errorHandler.buildDepError "http-client"))
             (hsPkgs."http-client-tls" or (errorHandler.buildDepError "http-client-tls"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
@@ -467,6 +497,7 @@
             (hsPkgs."tasty" or (errorHandler.buildDepError "tasty"))
             (hsPkgs."tasty-hunit" or (errorHandler.buildDepError "tasty-hunit"))
             (hsPkgs."smallcheck" or (errorHandler.buildDepError "smallcheck"))
+            (hsPkgs."tasty-hedgehog" or (errorHandler.buildDepError "tasty-hedgehog"))
             (hsPkgs."tasty-smallcheck" or (errorHandler.buildDepError "tasty-smallcheck"))
             (hsPkgs."tasty-quickcheck" or (errorHandler.buildDepError "tasty-quickcheck"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
@@ -475,6 +506,7 @@
             ];
           buildable = true;
           modules = [
+            "Cardano/Api/NetworkId/ExtraSpec"
             "Cardano/Metadata/ServerSpec"
             "Cardano/Metadata/TypesSpec"
             "Cardano/Wallet/ServerSpec"
@@ -490,6 +522,7 @@
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             (hsPkgs."freer-extras" or (errorHandler.buildDepError "freer-extras"))
             (hsPkgs."freer-simple" or (errorHandler.buildDepError "freer-simple"))
             (hsPkgs."http-client" or (errorHandler.buildDepError "http-client"))

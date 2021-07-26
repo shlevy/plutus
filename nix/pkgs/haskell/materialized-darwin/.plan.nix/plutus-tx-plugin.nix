@@ -95,6 +95,7 @@
             ];
           buildable = if system.isWindows then false else true;
           modules = [
+            "IsData/Spec"
             "Lift/Spec"
             "Plugin/Spec"
             "Plugin/Basic/Spec"
