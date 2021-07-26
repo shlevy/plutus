@@ -126,6 +126,7 @@
             (hsPkgs."plutus-ledger" or (errorHandler.buildDepError "plutus-ledger"))
             (hsPkgs."plutus-tx" or (errorHandler.buildDepError "plutus-tx"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             ];
           buildable = true;
           hsSourceDirs = [ "pab" ];
