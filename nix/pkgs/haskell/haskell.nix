@@ -180,6 +180,10 @@ let
             platforms = lib.platforms.linux;
           };
 
+          # Windows build of libpq is marked as broken
+          fake-pab.components.library.platforms = with lib.platforms; [ linux darwin ];
+          fake-pab.components.exes.fake-pab-server.platforms = with lib.platforms; [ linux darwin ];
+
           # Broken due to warnings, unclear why the setting that fixes this for the build doesn't work here.
           iohk-monitoring.doHaddock = false;
 
