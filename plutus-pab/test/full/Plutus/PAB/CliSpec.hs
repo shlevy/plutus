@@ -76,13 +76,7 @@ data TestingContracts = PingPong
 instance HasDefinitions TestingContracts where
   getDefinitions = [ PingPong ]
   getSchema _    = Builtin.endpointsToSchemas @PingPong.PingPongSchema
-  getContract _  = SomeBuiltin pingPong
-
-pingPong = do
-  _ <- PingPong.initialise @()
-  PingPong.runPong @()
-  PingPong.runPing @()
-  PingPong.runPong @()
+  getContract _  = SomeBuiltin PingPong.simplePingPong
 
 instance HasPSTypes TestingContracts where
   psTypes _ = undefined
@@ -154,10 +148,14 @@ run = do
   let endpoints = [ "initialise", "pong", "ping" ]
 
   forM_ endpoints $ \e -> do
+    putStrLn $ "Waiting ..."
+    threadDelay $ 10 * 1_000_000
     putStrLn $ "Calling endpoint: " ++ e
     x' <- runClientM (endpoint e (toJSON ())) apiClientEnv
     putStrLn $ show x'
-    threadDelay $ 10 * 1_000_000
+    putStrLn $ "Status endpoint: " ++ e
+    s' <- runClientM status' apiClientEnv
+    putStrLn $ show s'
 
   pure ()
 

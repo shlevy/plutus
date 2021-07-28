@@ -29,7 +29,6 @@ import           Data.Row
 import           Language.PureScript.Bridge                (equal, genericShow, mkSumType)
 import           Language.PureScript.Bridge.TypeParameters (A)
 import           Playground.Types                          (FunctionSchema)
-import           Plutus.Contract                           (Contract)
 import qualified Plutus.Contracts.Currency                 as Contracts.Currency
 import qualified Plutus.Contracts.GameStateMachine         as Contracts.GameStateMachine
 import qualified Plutus.Contracts.PingPong                 as Contracts.PingPong
@@ -117,14 +116,7 @@ getExampleContracts = \case
     PrismUnlockExchange -> SomeBuiltin (Contracts.Prism.unlockExchange @() @Contracts.Prism.UnlockExchangeSchema)
     PrismUnlockSto      -> SomeBuiltin (Contracts.Prism.subscribeSTO @() @Contracts.Prism.STOSubscriberSchema)
     WaitForTx           -> SomeBuiltin Contracts.WaitForTx.waitForTx
-    PingPong            -> SomeBuiltin pingPong
-
-pingPong :: Contract () Contracts.PingPong.PingPongSchema Contracts.PingPong.PingPongError ()
-pingPong = do
-  _ <- Contracts.PingPong.initialise @()
-  Contracts.PingPong.runPong @()
-  Contracts.PingPong.runPing @()
-  Contracts.PingPong.runPong @()
+    PingPong            -> SomeBuiltin Contracts.PingPong.simplePingPong
 
 handlers :: SimulatorEffectHandlers (Builtin ExampleContracts)
 handlers =
