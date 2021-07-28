@@ -1109,15 +1109,12 @@
           "monoidal-containers".components.library.planned = lib.mkOverride 900 true;
           "extensible-exceptions".components.library.planned = lib.mkOverride 900 true;
           "rate-limit".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."plutus-pab".planned = lib.mkOverride 900 true;
           "atomic-primops".components.library.planned = lib.mkOverride 900 true;
           "composition-prelude".components.library.planned = lib.mkOverride 900 true;
           "stm".components.library.planned = lib.mkOverride 900 true;
           "old-locale".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."prism-unlock-sto".planned = lib.mkOverride 900 true;
           "SHA".components.library.planned = lib.mkOverride 900 true;
           "split".components.library.planned = lib.mkOverride 900 true;
-          "marlowe".components.exes."marlowe-follow-app".planned = lib.mkOverride 900 true;
           "x509-validation".components.library.planned = lib.mkOverride 900 true;
           "dec".components.library.planned = lib.mkOverride 900 true;
           "marlowe-actus".components.library.planned = lib.mkOverride 900 true;
@@ -1161,7 +1158,6 @@
           "MonadRandom".components.library.planned = lib.mkOverride 900 true;
           "mmorph".components.library.planned = lib.mkOverride 900 true;
           "indexed-traversable".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."plutus-wait-for-tx".planned = lib.mkOverride 900 true;
           "th-compat".components.library.planned = lib.mkOverride 900 true;
           "assoc".components.library.planned = lib.mkOverride 900 true;
           "statistics".components.library.planned = lib.mkOverride 900 true;
@@ -1289,7 +1285,6 @@
           "async".components.library.planned = lib.mkOverride 900 true;
           "protolude".components.library.planned = lib.mkOverride 900 true;
           "lobemo-backend-monitoring".components.library.planned = lib.mkOverride 900 true;
-          "marlowe".components.exes."marlowe-app".planned = lib.mkOverride 900 true;
           "Glob".components.library.planned = lib.mkOverride 900 true;
           "http-types".components.library.planned = lib.mkOverride 900 true;
           "doctest".components.library.planned = lib.mkOverride 900 true;
@@ -1299,7 +1294,6 @@
           "constraints".components.library.planned = lib.mkOverride 900 true;
           "network".components.library.planned = lib.mkOverride 900 true;
           "word8".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."prism-mirror".planned = lib.mkOverride 900 true;
           "plutus-tx-plugin".components.library.planned = lib.mkOverride 900 true;
           "tracer-transformers".components.library.planned = lib.mkOverride 900 true;
           "plutus-benchmark".components.benchmarks."nofib-hs".planned = lib.mkOverride 900 true;
@@ -1312,7 +1306,6 @@
           "HUnit".components.library.planned = lib.mkOverride 900 true;
           "tree-diff".components.library.planned = lib.mkOverride 900 true;
           "plutus-metatheory".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."prism-unlock-exchange".planned = lib.mkOverride 900 true;
           "fast-logger".components.library.planned = lib.mkOverride 900 true;
           "vector".components.library.planned = lib.mkOverride 900 true;
           "template-haskell".components.library.planned = lib.mkOverride 900 true;
@@ -1373,6 +1366,7 @@
           "generic-data".components.setup.planned = lib.mkOverride 900 true;
           "string-conv".components.library.planned = lib.mkOverride 900 true;
           "tasty-bench".components.library.planned = lib.mkOverride 900 true;
+          "plutus-pab".components.exes."plutus-pab-examples".planned = lib.mkOverride 900 true;
           "ouroboros-network-testing".components.library.planned = lib.mkOverride 900 true;
           "free".components.library.planned = lib.mkOverride 900 true;
           "test-framework-hunit".components.library.planned = lib.mkOverride 900 true;
@@ -1393,13 +1387,11 @@
           "cookie".components.library.planned = lib.mkOverride 900 true;
           "generic-data".components.library.planned = lib.mkOverride 900 true;
           "ouroboros-network".components.exes."demo-chain-sync".planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."plutus-atomic-swap".planned = lib.mkOverride 900 true;
           "plutus-use-cases".components.library.planned = lib.mkOverride 900 true;
           "pipes".components.library.planned = lib.mkOverride 900 true;
           "ouroboros-network".components.library.planned = lib.mkOverride 900 true;
           "plutus-contract".components.tests."plutus-contract-test".planned = lib.mkOverride 900 true;
           "hostname".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."plutus-game".planned = lib.mkOverride 900 true;
           "basement".components.library.planned = lib.mkOverride 900 true;
           "base-unicode-symbols".components.library.planned = lib.mkOverride 900 true;
           "setenv".components.library.planned = lib.mkOverride 900 true;
@@ -1490,7 +1482,6 @@
           "tasty-hedgehog".components.library.planned = lib.mkOverride 900 true;
           "postgresql-simple".components.library.planned = lib.mkOverride 900 true;
           "base".components.library.planned = lib.mkOverride 900 true;
-          "marlowe".components.exes."marlowe-companion-app".planned = lib.mkOverride 900 true;
           "rts".components.library.planned = lib.mkOverride 900 true;
           "vector-sized".components.library.planned = lib.mkOverride 900 true;
           "cmdargs".components.library.planned = lib.mkOverride 900 true;
@@ -1517,7 +1508,6 @@
           "lazy-search".components.library.planned = lib.mkOverride 900 true;
           "abstract-deque".components.library.planned = lib.mkOverride 900 true;
           "plutus-core".components.benchmarks."update-cost-model".planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."plutus-pay-to-wallet".planned = lib.mkOverride 900 true;
           "mtl".components.library.planned = lib.mkOverride 900 true;
           "plutus-errors".components.exes."plutus-errors-bootstrap".planned = lib.mkOverride 900 true;
           "time".components.library.planned = lib.mkOverride 900 true;
@@ -1549,6 +1539,7 @@
           "plutus-playground-server".components.sublibs."plutus-playground-usecases".planned = lib.mkOverride 900 true;
           "megaparsec".components.library.planned = lib.mkOverride 900 true;
           "th-orphans".components.library.planned = lib.mkOverride 900 true;
+          "plutus-pab".components.exes."plutus-pab-setup".planned = lib.mkOverride 900 true;
           "base64-bytestring-type".components.library.planned = lib.mkOverride 900 true;
           "generic-deriving".components.library.planned = lib.mkOverride 900 true;
           "IntervalMap".components.library.planned = lib.mkOverride 900 true;
@@ -1610,7 +1601,6 @@
           "ghc-boot-th".components.library.planned = lib.mkOverride 900 true;
           "ouroboros-network-framework".components.library.planned = lib.mkOverride 900 true;
           "nothunks".components.library.planned = lib.mkOverride 900 true;
-          "plutus-pab".components.exes."plutus-currency".planned = lib.mkOverride 900 true;
           "time-out".components.library.planned = lib.mkOverride 900 true;
           "typerep-map".components.library.planned = lib.mkOverride 900 true;
           "lobemo-backend-aggregation".components.library.planned = lib.mkOverride 900 true;
