@@ -58,7 +58,7 @@ let
 
           pkgs = packages.pkgs;
           plutus = packages.plutus;
-          isBuildable = platformFilterGeneric pkgs system;
+          isBuildable = platformFilterGeneric pkgs (if crossSystem == null then system else crossSystem.config);
         in
         filterAttrsOnlyRecursive (_: drv: isBuildable drv) ({
           # build relevant top level attributes from default.nix

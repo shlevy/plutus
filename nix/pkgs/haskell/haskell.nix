@@ -180,6 +180,12 @@ let
             platforms = lib.platforms.linux;
           };
 
+          marlowe-actus.components.exes.marlowe-actus-test-kit = {
+            build-tools = r-packages;
+            # Seems to be broken on darwin for some reason
+            platforms = lib.platforms.linux;
+          };
+
           # Windows build of libpq is marked as broken
           fake-pab.components.library.platforms = with lib.platforms; [ linux darwin ];
           fake-pab.components.exes.fake-pab-server.platforms = with lib.platforms; [ linux darwin ];
