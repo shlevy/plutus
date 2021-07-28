@@ -41,18 +41,16 @@ import           Control.Monad.Freer.Error                        (Error, throwE
 import           Control.Monad.Freer.Extras.Log                   (LogMsg (..), logDebug)
 import           Data.Aeson                                       (FromJSON, Result (..), ToJSON, Value, fromJSON)
 import qualified Data.Aeson                                       as JSON
-import           Data.Aeson.Text                                  (encodeToLazyText)
 import           Data.Bifunctor                                   (Bifunctor (first))
 import           Data.Foldable                                    (foldlM, traverse_)
 import           Data.Row
 import qualified Data.Text                                        as Text
-import           Data.Text.Lazy                                   (toStrict)
 import           GHC.Generics                                     (Generic)
 import           Playground.Schema                                (endpointsToSchemas)
 import           Playground.Types                                 (FunctionSchema)
 import           Plutus.Contract                                  (Contract, ContractInstanceId, EmptySchema)
 import           Plutus.Contract.Effects                          (PABReq, PABResp)
-import           Plutus.Contract.Resumable                        (Response, responses, rspResponse)
+import           Plutus.Contract.Resumable                        (Response, responses)
 import           Plutus.Contract.Schema                           (Input, Output)
 import           Plutus.Contract.State                            (ContractResponse (..), State (..))
 import qualified Plutus.Contract.State                            as ContractState
@@ -150,14 +148,13 @@ fromResponse cid (SomeBuiltin contract) ContractResponse{newState=State{record}}
   initialState <- initBuiltin @effs @a cid contract
 
   let runUpdate (SomeBuiltinState oldS oldW) n = do
-        let v = rspResponse (snd <$> n)
+        let v = snd <$> n
             m :: Result (Response PABResp)
-            m = traverse fromJSON (snd <$> n)
-
+            m = traverse fromJSON v
         case m of
           Error e      -> throwError $ AesonDecodingError
                                       ("Couldn't decode JSON response when reconstructing state: " <> Text.pack e <> ".")
-                                      (toStrict . encodeToLazyText $ v)
+                                      ( Text.pack $ show $ v )
           Success resp -> updateBuiltin @effs @a cid oldS oldW resp
 
   foldlM runUpdate initialState (responses record)
