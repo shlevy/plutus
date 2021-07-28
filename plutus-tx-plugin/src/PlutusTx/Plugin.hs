@@ -50,6 +50,7 @@ import           Data.Traversable
 import           ErrorCode
 import qualified FamInstEnv                    as GHC
 
+import           System.IO                     (openTempFile)
 import           System.IO.Unsafe              (unsafePerformIO)
 
 data PluginOptions = PluginOptions {
@@ -57,6 +58,7 @@ data PluginOptions = PluginOptions {
     , poDeferErrors  :: Bool
     , poContextLevel :: Int
     , poDumpPir      :: Bool
+    , poDumpPirFlat  :: Bool
     , poDumpPlc      :: Bool
     , poOptimize     :: Bool
     }
@@ -120,15 +122,21 @@ mkSimplPass flags =
 parsePluginArgs :: [GHC.CommandLineOption] -> GHC.CoreM PluginOptions
 parsePluginArgs args = do
     let opts = PluginOptions {
-            poDoTypecheck = notElem "dont-typecheck" args
-            , poDeferErrors = elem "defer-errors" args
-            , poContextLevel = if elem "no-context" args then 0 else if elem "debug-context" args then 3 else 1
-            , poDumpPir = elem "dump-pir" args
-            , poDumpPlc = elem "dump-plc" args
-            , poOptimize = notElem "dont-optimize" args
+            poDoTypecheck = notElem' "dont-typecheck"
+            , poDeferErrors = elem' "defer-errors"
+            , poContextLevel = if elem' "no-context" then 0 else if elem "debug-context" args then 3 else 1
+            , poDumpPir = elem' "dump-pir"
+            , poDumpPirFlat = elem' "dump-pir-flat"
+            , poDumpPlc = elem' "dump-plc"
+            , poOptimize = notElem' "dont-optimize"
             }
     -- TODO: better parsing with failures
     pure opts
+    where
+        elem' :: String -> Bool
+        elem' = flip elem args
+        notElem' :: String -> Bool
+        notElem' = flip notElem args
 
 {- Note [Marker resolution]
 We use TH's 'foo exact syntax for resolving the 'plc marker's ghc name, as
@@ -320,6 +328,14 @@ runCompiler opts expr = do
 
     -- GHC.Core -> Pir translation.
     pirT <- PIR.runDefT () $ compileExprWithDefs expr
+
+    -- dumping binary pir
+    -- NOTE:  consider doing it after simplification
+    when (poDumpPirFlat opts) . liftIO $ do
+      let fpirT = flat pirT
+      (tPath, tHandle) <- openTempFile "." "pir-term.flat"
+      putStrLn $ "!!! dumping binary pir term to" ++ show tPath
+      BS.hPut tHandle fpirT
 
     -- Pir -> (Simplified) Pir pass. We can then dump/store a more legible PIR program.
     spirT <- flip runReaderT pirCtx $ PIR.compileToReadable pirT

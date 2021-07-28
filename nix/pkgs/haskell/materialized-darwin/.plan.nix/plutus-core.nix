@@ -254,6 +254,7 @@
           "PlutusIR"
           "PlutusIR/Core"
           "PlutusIR/Core/Instance"
+          "PlutusIR/Core/Instance/Flat"
           "PlutusIR/Core/Instance/Pretty"
           "PlutusIR/Core/Plated"
           "PlutusIR/Core/Type"
@@ -357,6 +358,20 @@
           modules = [ "Common" "Parsers" ];
           hsSourceDirs = [ "executables" ];
           mainPath = [ "uplc/Main.hs" ];
+          };
+        "pir" = {
+          depends = [
+            (hsPkgs."plutus-core" or (errorHandler.buildDepError "plutus-core"))
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
+            (hsPkgs."flat" or (errorHandler.buildDepError "flat"))
+            (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+            (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
+            (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
+            ];
+          buildable = true;
+          hsSourceDirs = [ "pir" ];
+          mainPath = [ "Main.hs" ];
           };
         };
       tests = {
