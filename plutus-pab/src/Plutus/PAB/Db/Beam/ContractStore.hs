@@ -22,7 +22,7 @@ import           Control.Lens
 import           Control.Monad                       (join)
 import           Control.Monad.Freer                 (Eff, Member, type (~>))
 import           Control.Monad.Freer.Error           (Error, throwError)
-import           Control.Monad.Freer.Extras          (LogMsg, logError)
+import           Control.Monad.Freer.Extras          (LogMsg)
 import           Data.Aeson                          (FromJSON, ToJSON, decode, encode)
 import           Data.ByteString.Builder             (toLazyByteString)
 import qualified Data.ByteString.Char8               as B
@@ -40,7 +40,6 @@ import           Plutus.PAB.Effects.Contract         (ContractStore (..), PABCon
 import           Plutus.PAB.Effects.Contract.Builtin (Builtin, HasDefinitions (getContract), fromResponse, getResponse)
 import           Plutus.PAB.Effects.DbStore          hiding (ContractInstanceId)
 import           Plutus.PAB.Monitoring.Monitoring    (PABMultiAgentMsg)
-import           Plutus.PAB.Monitoring.PABLogMsg
 import           Plutus.PAB.Types                    (PABError (..))
 import           Plutus.PAB.Webserver.Types          (ContractActivationArgs (..))
 import           Wallet.Emulator.Wallet              (Wallet (..))
@@ -112,7 +111,6 @@ handleContractStore = \case
   PutState _ instanceId state ->
     let encode' = Text.decodeUtf8 . B.concat . LB.toChunks . encode . getResponse
     in do
-        logError @(PABMultiAgentMsg (Builtin a)) (UserLog $ encode' state)
         updateRow
           $ update (_contractInstances db)
               (\ci -> ci ^. contractInstanceState <-. val_ (Just $ encode' state))
@@ -124,7 +122,6 @@ handleContractStore = \case
           Nothing -> throwError $ ContractInstanceNotFound instanceId
           Just  c ->
             do
-              -- logError @(PABMultiAgentMsg (Builtin a)) (UserLog $ encode' state)
               let a = _contractInstanceContractId c
                   ty = Text.pack $ show $ typeRep (Proxy :: Proxy a)
 

@@ -152,7 +152,8 @@ fromResponse cid (SomeBuiltin contract) ContractResponse{newState=State{record}}
   let runUpdate (SomeBuiltinState oldS oldW) n = do
         let v = rspResponse (snd <$> n)
             m :: Result (Response PABResp)
-            m = fromJSON v
+            m = traverse fromJSON (snd <$> n)
+
         case m of
           Error e      -> throwError $ AesonDecodingError
                                       ("Couldn't decode JSON response when reconstructing state: " <> Text.pack e <> ".")
