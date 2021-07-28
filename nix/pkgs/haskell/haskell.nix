@@ -110,6 +110,11 @@ let
         packages.marlowe.components.tests.marlowe-test.buildable = lib.mkForce false;
         packages.prettyprinter-configurable.components.tests.prettyprinter-configurable-test.buildable = lib.mkForce false;
       })
+      ({ lib, pkgs, ...}: {
+        # Use our forked libsodium from iohk-nix crypto overlay.
+        packages.cardano-crypto-praos.components.library.pkgconfig = lib.mkForce [ [ pkgs.libsodium-vrf ] ];
+        packages.cardano-crypto-class.components.library.pkgconfig = lib.mkForce [ [ pkgs.libsodium-vrf ] ];
+      })
       ({ pkgs, ... }: lib.mkIf (pkgs.stdenv.hostPlatform != pkgs.stdenv.buildPlatform) {
         # Remove hsc2hs build-tool dependencies (suitable version will be available as part of the ghc derivation)
         packages.terminal-size.components.library.build-tools = lib.mkForce [];
