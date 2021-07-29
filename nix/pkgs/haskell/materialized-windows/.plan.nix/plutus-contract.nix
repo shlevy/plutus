@@ -174,6 +174,7 @@
             (hsPkgs."plutus-tx" or (errorHandler.buildDepError "plutus-tx"))
             (hsPkgs."freer-simple" or (errorHandler.buildDepError "freer-simple"))
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
+            (hsPkgs."semigroupoids" or (errorHandler.buildDepError "semigroupoids"))
             (hsPkgs."plutus-tx-plugin" or (errorHandler.buildDepError "plutus-tx-plugin"))
             ];
           buildable = true;
@@ -182,6 +183,7 @@
             "Spec/Emulator"
             "Spec/Rows"
             "Spec/State"
+            "Spec/ThreadToken"
             ];
           hsSourceDirs = [ "test" ];
           mainPath = [ "Spec.hs" ];

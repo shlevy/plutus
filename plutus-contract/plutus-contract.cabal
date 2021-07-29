@@ -195,5 +195,5 @@ test-suite plutus-contract-test
         plutus-tx -any,
         freer-simple -any,
         aeson -any,
-        semigroupoids -any
+        semigroupoids -any,
         plutus-tx-plugin -any
