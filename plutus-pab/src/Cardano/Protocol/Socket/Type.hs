@@ -53,8 +53,6 @@ import           Ledger                                             (Block, OnCh
 import           Ledger.Bytes                                       (LedgerBytes (..))
 import qualified PlutusTx.Prelude                                   as PlutusTx
 
-deriving anyclass instance NoThunks PlutusTx.BuiltinByteString
-
 -- | Tip of the block chain type (used by node protocols).
 type Tip = Block
 
